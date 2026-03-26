@@ -1,9 +1,9 @@
 import { useState } from "react";
-import BgImgBlur from "../assets/BgImgBlur.png";
-import "./Login.css";
-import logo from "../assets/logo.png";
-import olhoAberto from "../assets/olhoAberto.png";
-import olhoFechado from "../assets/olhoFechado.png";
+import BgImgBlur from "../../assets/BgImgBlur.png";
+import "../styles/Login.css";
+import logo from "../../assets/logo.png";
+import olhoAberto from "../../assets/olhoAberto.png";
+import olhoFechado from "../../assets/olhoFechado.png";
 import { useNavigate } from "react-router-dom";
 
 function Login() {

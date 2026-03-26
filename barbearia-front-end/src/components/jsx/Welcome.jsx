@@ -1,6 +1,6 @@
-import "./Welcome.css";
-import logo from "../assets/logo.png";
-import bgImg from "../assets/BgImg.png";
+import "../styles/Welcome.css";
+import logo from "../../assets/logo.png";
+import bgImg from "../../assets/BgImg.png";
 import { useNavigate } from "react-router-dom";
 
 function Welcome() {

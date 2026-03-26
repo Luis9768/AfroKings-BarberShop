@@ -1,9 +1,9 @@
 import { useState } from "react";
-import BgImgBlur from "../assets/BgImgBlur.png";
-import "./Cadastro.css";
-import logo from "../assets/logo.png";
-import olhoAberto from "../assets/olhoAberto.png";
-import olhoFechado from "../assets/olhoFechado.png";
+import BgImgBlur from "../../assets/BgImgBlur.png";
+import "../styles/Cadastro.css";
+import logo from "../../assets/logo.png";
+import olhoAberto from "../../assets/olhoAberto.png";
+import olhoFechado from "../../assets/olhoFechado.png";
 import { useNavigate } from "react-router-dom";
 
 function Cadastro() {
@@ -18,15 +18,21 @@ function Cadastro() {
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleCadastro = async (e) => {
     e.preventDefault();
+
+    let dataFormatada = "";
+    if (dataNascimento) {
+      const partes = dataNascimento.split("-");
+      dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
 
     const dadosCadastro = {
       nome: nome,
       contato: contato,
       cpf: cpf,
       email: email,
-      dataNascimento: dataNascimento,
+      dataNascimento: dataFormatada,
       senha: password,
     };
 
@@ -42,13 +48,13 @@ function Cadastro() {
       if (resposta.ok) {
         const dados = await resposta.json();
 
-        console.log("Sucesso! A conta foi crada com sucesso! : ", dados);
-
-        localStorage.setItem("token", dados.token);
+        console.log("A conta foi criada com sucesso! : ", dados);
 
         navigate("/homePage");
       } else {
-        console.log("Não foi poaaível criar a conta verifique as informações.");
+        console.log(
+          "Não foi possível criar a conta. Verifique as informações e tente novamente.",
+        );
       }
     } catch (erro) {
       console.log("Erro ao tentar conectar com a API:", erro);
@@ -60,10 +66,10 @@ function Cadastro() {
     <div className="cadastro-container">
       <img src={BgImgBlur} alt="fundo" className="bg-image" />
 
-      <form className="cadastro-form" onSubmit={handleLogin}>
+      <form className="cadastro-form" onSubmit={handleCadastro}>
         <h2>Cadastre-se</h2>
         <input
-          type="nome"
+          type="text"
           name="nome"
           id="nome"
           placeholder="digite seu nome"
@@ -72,7 +78,7 @@ function Cadastro() {
           className="cadastro-box"
         />
         <input
-          type="contato"
+          type="tel"
           name="contato"
           id="contato"
           placeholder="digite seu contato"
@@ -81,7 +87,7 @@ function Cadastro() {
           className="cadastro-box"
         />
         <input
-          type="cpf"
+          type="text"
           name="cpf"
           id="cpf"
           placeholder="digite seu CPF"

@@ -18,16 +18,19 @@
   background-color: transparent;
   border-radius: 15px;
   width: 70%;
+  color: #000;
 }
 .cadastro-box {
   padding: 16px;
   background-color: transparent;
   border-radius: 15px;
+  color: #000;
 }
 .cadastro-box::-webkit-datetime-edit {
     color: #000;
 }
 h2 {
   color: #000000;
+  font-weight: 550;
 }
 
