@@ -6,7 +6,7 @@ import bannerRealeza from "../../assets/bannerRealeza.png";
 
 function HomePage() {
   return (
-    <div>
+    <div className="div-all">
       <header className="header-container">
         <button className="barrinhas">
           <img src={tresBarrinhas} alt="barras-img" />
