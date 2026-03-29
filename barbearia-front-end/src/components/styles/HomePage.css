@@ -27,10 +27,93 @@
   align-items: center;
   justify-content: center;
   padding-top: 100px;
+  gap: px;
 }
 .banner-img{
     width: 100%;
-    max-width: 700px;
-    height: 300px;
+    height: 350px;
 }
+.cortes-container h2{
+  color: aliceblue;
+  font-family: 'Cinzel Decorative';
+  font-weight: 500;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+.cortes-container{
+  margin-top: 60px;
+  justify-content: start;
+  gap: 50px;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  display: flex;
+}
+.corte-card{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
 
+  width: 300px;
+  border: 1px solid #9E7F35;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #000000;
+  border: 2px solid #9E7F35;
+  padding: 15px;
+  box-sizing: border-box;
+
+}
+.img-corte{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.info-corte{
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+  font-weight: normal;
+  text-align: left;
+}
+.preco-corte{
+  margin: 0;
+  font-size: 1.1rem;
+  font: weight 700px;
+}
+.card-select-btn{
+  background-color: #000000;
+  color: #ffffff;
+  border: 2px solid #9E7F35;
+  border-radius: 25px;
+  padding: 8px 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: backgroud-color 0.3s;
+}
+.card-select-btn:hover{
+  background-color: #9E7F35;
+  color: #000000;
+}
+.card-image-wrapper{
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+.card-content{
+  display: flex;
+  flex-direction: column;
+}
+.card-action-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.cortes-container h2{
+  border-bottom: 1px solid #333333;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
