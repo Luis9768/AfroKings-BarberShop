@@ -145,7 +145,7 @@ Ao iniciar a aplicação pela primeira vez, o sistema gera automaticamente os da
 | Perfil | E-mail / Login | Senha | Acesso |
 | :--- | :--- | :--- | :--- |
 | **👑 Administrador** | `admin@email.com` | `123456` | Painel Admin, Gestão de Cortes, Barbeiros e Clientes |
-| **✂️ Cliente VIP** | `luis@email.com` | `123456` | Agendamentos, Meus Cortes e Perfil |
+| **✂️ Cliente VIP** | `cliente@email.com` | `123456` | Agendamentos, Meus Cortes e Perfil |
 
 > *Você também pode cadastrar novos clientes diretamente pela tela de **Cadastro**.*
 
@@ -228,5 +228,5 @@ Este projeto está sob a licença **MIT** - consulte o arquivo [LICENSE](LICENSE
 ---
 
 <div align="center">
-  <sub>Desenvolvido com ☕, paixão pela cultura afro e excelência técnica por <strong>Luis Miguel</strong>.</sub>
+  <sub>Desenvolvido com ☕, paixão pela cultura afro e excelência técnica para <strong>AfroKings BarberShop</strong>.</sub>
 </div>
