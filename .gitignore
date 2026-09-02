@@ -1,0 +1,47 @@
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Node / Frontend
+**/node_modules/
+**/dist/
+**/dist-ssr/
+*.local
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Maven / Java / Backend
+**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+build/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE & Editors
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+.project
+.classpath
+.settings/
+.apt_generated/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker Data
+postgres_data/
+db_data/

@@ -1,0 +1,589 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap");
+
+.admin-page {
+  min-height: 100vh;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  padding-bottom: 80px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.admin-container {
+  padding-top: 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+.admin-header-row {
+  margin-bottom: 18px;
+}
+
+.admin-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #9E7F35;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.admin-title {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Tabs Nav - Horizontally scrollable on mobile */
+.admin-tabs-nav {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid #222222;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.admin-tabs-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.admin-tab-btn {
+  background: transparent;
+  border: none;
+  color: #888888;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  padding: 8px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.admin-tab-btn:hover {
+  background-color: #141414;
+  color: #ffffff;
+}
+
+.admin-tab-btn.active {
+  background-color: #1a160d;
+  color: #C5A85A;
+  border: 1px solid #9E7F35;
+  font-weight: 600;
+}
+
+/* Tab Content */
+.tab-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.agenda-filters-card {
+  background-color: #0e0e0e;
+  border: 1px solid #222222;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-group label {
+  font-size: 0.75rem;
+  color: #C5A85A;
+  font-weight: 500;
+}
+
+.admin-select,
+.admin-date-input {
+  background-color: #181818;
+  border: 1px solid #333333;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  outline: none;
+  color-scheme: dark;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-select:focus,
+.admin-date-input:focus {
+  border-color: #9E7F35;
+}
+
+.agenda-dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 860px) {
+  .agenda-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.agenda-list-column,
+.ranking-column {
+  background-color: #0e0e0e;
+  border: 1px solid #222222;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1f1f1f;
+  padding-bottom: 10px;
+}
+
+.column-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.date-badge {
+  background-color: #1a160d;
+  color: #C5A85A;
+  border: 1px solid #9E7F35;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+}
+
+.agenda-slots-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.agenda-slot-card {
+  background-color: #141414;
+  border: 1px solid #262626;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.slot-time-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #C5A85A;
+  min-width: 80px;
+}
+
+.slot-info {
+  flex: 1;
+  min-width: 140px;
+}
+
+.slot-info h4 {
+  margin: 0 0 2px 0;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.slot-info p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #888888;
+}
+
+.slot-badge {
+  background-color: rgba(158, 127, 53, 0.15);
+  color: #C5A85A;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+  border: 1px solid #9E7F35;
+}
+
+/* Ranking */
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ranking-item-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #141414;
+  border: 1px solid #222222;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.rank-number {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #9E7F35;
+  min-width: 28px;
+}
+
+.rank-info h4 {
+  margin: 0 0 2px 0;
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.rank-count {
+  font-size: 0.75rem;
+  color: #888888;
+}
+
+/* Actions bar & Tables */
+.admin-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background-color: #0e0e0e;
+  border: 1px solid #222222;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.admin-actions-bar h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.sub-text {
+  margin: 2px 0 0 0;
+  color: #888888;
+  font-size: 0.75rem;
+}
+
+.btn-admin-add {
+  background: linear-gradient(135deg, #9E7F35 0%, #C5A85A 100%);
+  color: #000000;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-height: 40px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.15s, filter 0.2s;
+}
+
+.btn-admin-add:hover,
+.btn-admin-add:active {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.admin-table-container {
+  background-color: #0e0e0e;
+  border: 1px solid #222222;
+  border-radius: 14px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.85rem;
+  min-width: 600px; /* Forces scroll on small screens */
+}
+
+.admin-table th {
+  background-color: #141414;
+  color: #C5A85A;
+  font-weight: 600;
+  padding: 12px 14px;
+  border-bottom: 1px solid #222222;
+}
+
+.admin-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #1a1a1a;
+  color: #cccccc;
+}
+
+.admin-table-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.desc-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.btn-table-icon {
+  background: transparent;
+  border: 1px solid #333333;
+  color: #cccccc;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-table-icon:hover {
+  background-color: #222222;
+  border-color: #9E7F35;
+  color: #C5A85A;
+}
+
+.btn-table-icon.delete:hover {
+  background-color: #3b1414;
+  border-color: #ff5252;
+  color: #ff5252;
+}
+
+/* Barbers Grid */
+.admin-barbers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.admin-barber-card {
+  background-color: #0e0e0e;
+  border: 1.5px solid #222222;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+.admin-barber-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #1a160d;
+  border: 1px solid #9E7F35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-barber-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.admin-barber-info p {
+  margin: 2px 0;
+  font-size: 0.75rem;
+  color: #888888;
+}
+
+.admin-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid #1f1f1f;
+  justify-content: flex-end;
+}
+
+/* Search Form */
+.admin-search-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.admin-search-input {
+  background-color: #161616;
+  border: 1px solid #333333;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  flex: 1;
+  outline: none;
+}
+
+.admin-search-input:focus {
+  border-color: #9E7F35;
+}
+
+.admin-search-btn {
+  background-color: #9E7F35;
+  color: #000000;
+  border: none;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal Admin */
+.admin-modal {
+  background-color: #121212;
+  border: 1.5px solid #9E7F35;
+  border-radius: 20px;
+  padding: 24px 18px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222222;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #ffffff;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: #888888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close:hover {
+  color: #ffffff;
+}
+
+.admin-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-input,
+.admin-textarea,
+.admin-file-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  background-color: #181818;
+  border: 1.5px solid #2e2e2e;
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.admin-textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #cccccc;
+}
+
+@media (max-width: 600px) {
+  .admin-container {
+    padding-top: 68px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .agenda-filters-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter-group {
+    min-width: 100%;
+  }
+  .admin-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-admin-add {
+    width: 100%;
+    justify-content: center;
+  }
+  .admin-barbers-grid {
+    grid-template-columns: 1fr;
+  }
+}
