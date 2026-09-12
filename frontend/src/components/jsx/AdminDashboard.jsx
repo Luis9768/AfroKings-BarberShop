@@ -286,13 +286,15 @@ function AdminDashboard() {
   const handleSalvarDiaEspecial = async (e) => {
     e.preventDefault();
     setSalvando(true);
-    try {
       const dados = {
         data: dataDiaEspecial,
+        descricao: motivoDiaEspecial.trim(),
         motivo: motivoDiaEspecial.trim(),
         diaFolga: ehFolga,
-        horarioAbertura: ehFolga ? "00:00:00" : `${aberturaEspecial}:00`,
-        horarioFechamento: ehFolga ? "00:00:00" : `${fechamentoEspecial}:00`,
+        horaAbertura: ehFolga ? null : aberturaEspecial,
+        horaFechamento: ehFolga ? null : fechamentoEspecial,
+        horarioAbertura: ehFolga ? null : aberturaEspecial,
+        horarioFechamento: ehFolga ? null : fechamentoEspecial,
       };
 
       await diaEspecialAPI.cadastrar(dados);
@@ -704,7 +706,7 @@ function AdminDashboard() {
                     diasEspeciais.map((d) => (
                       <tr key={d.id}>
                         <td><strong>{d.data}</strong></td>
-                        <td>{d.motivo || "Feriado / Manutenção"}</td>
+                        <td>{d.descricao || d.motivo || "Feriado / Manutenção"}</td>
                         <td>
                           {d.diaFolga ? (
                             <span className="badge-folga">Folga / Fechado</span>
@@ -715,7 +717,7 @@ function AdminDashboard() {
                         <td>
                           {d.diaFolga
                             ? "Não abre"
-                            : `${d.horarioAbertura?.slice(0, 5)} às ${d.horarioFechamento?.slice(0, 5)}`}
+                            : `${(d.horarioAbertura || d.horaAbertura)?.slice(0, 5)} às ${(d.horarioFechamento || d.horaFechamento)?.slice(0, 5)}`}
                         </td>
                         <td style={{ textAlign: "right" }}>
                           <button

@@ -5,29 +5,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-@JsonPropertyOrder({"descricao","data","horarioAbertura","horarioFechamento", "mensagem"})
+
+@JsonPropertyOrder({"id", "descricao", "data", "diaFolga", "horarioAbertura", "horarioFechamento", "mensagem"})
 public record SaidaDiaEspecialDTO(
+        Integer id,
         LocalDate data,
         LocalTime horarioAbertura,
         LocalTime horarioFechamento,
         String descricao,
+        Boolean diaFolga,
         String mensagem
 ) {
-    // Construtor customizado que recebe a Entidade do banco
     public SaidaDiaEspecialDTO(DiaEspecial dia) {
         this(
+                dia.getId(),
                 dia.getData(),
-
-                // Se for folga, devolve null. Se não, devolve o horário de abertura.
-                dia.getDiaFolga() ? null : dia.getHorarioAbertura(),
-
-                // Se for folga, devolve null. Se não, devolve o horário de fechamento.
-                dia.getDiaFolga() ? null : dia.getHorarioFechamento(),
-
+                Boolean.TRUE.equals(dia.getDiaFolga()) ? null : dia.getHorarioAbertura(),
+                Boolean.TRUE.equals(dia.getDiaFolga()) ? null : dia.getHorarioFechamento(),
                 dia.getDescricao(),
-
-                // A mágica da mensagem para o Front-end!
-                dia.getDiaFolga() ? "É dia de folga!" : null
+                Boolean.TRUE.equals(dia.getDiaFolga()),
+                Boolean.TRUE.equals(dia.getDiaFolga()) ? "É dia de folga!" : null
         );
     }
 }

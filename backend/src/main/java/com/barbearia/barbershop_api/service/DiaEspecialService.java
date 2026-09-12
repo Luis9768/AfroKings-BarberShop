@@ -21,7 +21,7 @@ public class DiaEspecialService {
 
     @Transactional
     public SaidaDiaEspecialDTO cadastro(DadosEntradaDiaEspecial dados, Usuario usuarioLogado) {
-        if (usuarioLogado.getPerfil() != Perfil.ADMIN) {
+        if (usuarioLogado == null || usuarioLogado.getPerfil() != Perfil.ADMIN) {
             throw new IllegalArgumentException("Você não tem permissão para realizar esta ação!");
         }
         validarDataPassado(dados.data());
@@ -31,18 +31,21 @@ public class DiaEspecialService {
         }
         DiaEspecial diaEspecial = new DiaEspecial();
         diaEspecial.setData(dados.data());
-        diaEspecial.setDiaFolga(dados.diaFolga());
+        boolean ehFolga = Boolean.TRUE.equals(dados.diaFolga());
+        diaEspecial.setDiaFolga(ehFolga);
         diaEspecial.setDescricao(dados.descricao());
-        if (diaEspecial.getDiaFolga() == true) {
+        if (ehFolga) {
             diaEspecial.setHorarioAbertura(null);
             diaEspecial.setHorarioFechamento(null);
         } else {
+            if (dados.horaAbertura() == null || dados.horaFechamento() == null) {
+                throw new IllegalArgumentException("Horários de abertura e fechamento são obrigatórios quando não for dia de folga!");
+            }
             diaEspecial.setHorarioFechamento(dados.horaFechamento());
             diaEspecial.setHorarioAbertura(dados.horaAbertura());
         }
         repository.save(diaEspecial);
         return new SaidaDiaEspecialDTO(diaEspecial);
-
     }
 
     public List<DiaEspecial> listarDiaEspecial() {
@@ -50,26 +53,30 @@ public class DiaEspecialService {
     }
 
     private void validarDataPassado(LocalDate data) {
-        if (data.isBefore(LocalDate.now())) {
+        if (data == null || data.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Não é permitido agendar no passado! Selecione uma data futura.");
         }
     }
 
     @Transactional
     public SaidaDiaEspecialDTO atualizarDiaEspecial(Integer id, DadosEntradaDiaEspecial dados, Usuario usuarioLogado) {
-        if (usuarioLogado.getPerfil() != Perfil.ADMIN) {
+        if (usuarioLogado == null || usuarioLogado.getPerfil() != Perfil.ADMIN) {
             throw new IllegalArgumentException("Você não tem permissão para realizar esta ação!");
         }
         DiaEspecial diaEspecial = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Dia Especial não encontrado!"));
         validarDataPassado(diaEspecial.getData());
 
         diaEspecial.setData(dados.data());
-        diaEspecial.setDiaFolga(dados.diaFolga());
+        boolean ehFolga = Boolean.TRUE.equals(dados.diaFolga());
+        diaEspecial.setDiaFolga(ehFolga);
         diaEspecial.setDescricao(dados.descricao());
-        if (diaEspecial.getDiaFolga() == true) {
+        if (ehFolga) {
             diaEspecial.setHorarioAbertura(null);
             diaEspecial.setHorarioFechamento(null);
         } else {
+            if (dados.horaAbertura() == null || dados.horaFechamento() == null) {
+                throw new IllegalArgumentException("Horários de abertura e fechamento são obrigatórios quando não for dia de folga!");
+            }
             diaEspecial.setHorarioFechamento(dados.horaFechamento());
             diaEspecial.setHorarioAbertura(dados.horaAbertura());
         }
@@ -78,7 +85,7 @@ public class DiaEspecialService {
     }
 
     public void deletarDiaEspecial(int id, Usuario usuarioLogado) {
-        if (usuarioLogado.getPerfil() != Perfil.ADMIN) {
+        if (usuarioLogado == null || usuarioLogado.getPerfil() != Perfil.ADMIN) {
             throw new IllegalArgumentException("Você não tem permissão para realizar esta ação!");
         }
         var buscarDia = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Dia Especial não encontrado!"));
