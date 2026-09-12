@@ -221,9 +221,10 @@ Contribuições são sempre bem-vindas! Se você deseja melhorar este projeto:
 
 ---
 
-## 📄 Licença
+## 📄 Licença e Direitos Autorais
 
-Este projeto está sob a licença **MIT** - consulte o arquivo [LICENSE](LICENSE) para obter mais detalhes.
+© 2026 **Luis Miguel**. Todos os direitos reservados.  
+Este projeto é direcionado e restrito exclusivamente para **fins acadêmicos e educacionais**. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ---
 

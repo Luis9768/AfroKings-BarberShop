@@ -1,0 +1,78 @@
+.main-footer {
+  width: 100%;
+  background-color: #080808;
+  border-top: 1px solid #2a2010;
+  padding: 24px 16px;
+  color: #a0a0a0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  box-sizing: border-box;
+  margin-top: auto;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.footer-copyright {
+  color: #e5e5e5;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.footer-copyright strong {
+  color: #C5A85A;
+}
+
+.footer-academic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #888888;
+  margin: 0;
+}
+
+.academic-badge {
+  background: linear-gradient(135deg, rgba(158, 127, 53, 0.25) 0%, rgba(197, 168, 90, 0.25) 100%);
+  border: 1px solid #9E7F35;
+  color: #C5A85A;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.footer-author {
+  font-size: 0.78rem;
+  color: #777777;
+  margin: 0;
+}
+
+.footer-author strong {
+  color: #b89742;
+}
+
+@media (max-width: 600px) {
+  .main-footer {
+    padding: 18px 12px;
+    font-size: 0.8rem;
+  }
+
+  .footer-academic {
+    font-size: 0.75rem;
+  }
+}

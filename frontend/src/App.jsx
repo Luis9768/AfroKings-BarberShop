@@ -11,6 +11,7 @@ import Agendamento from "./components/jsx/Agendamento";
 import MeusAgendamentos from "./components/jsx/MeusAgendamentos";
 import Perfil from "./components/jsx/Perfil";
 import AdminDashboard from "./components/jsx/AdminDashboard";
+import Footer from "./components/common/Footer";
 
 import "./App.css";
 
@@ -18,7 +19,9 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
+        <div className="app-wrapper">
+          <main className="app-content">
+            <Routes>
           {/* Rotas Públicas */}
           <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
@@ -72,12 +75,15 @@ function App() {
             }
           />
 
-          {/* Rota Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  );
+            {/* Rota Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  </AuthProvider>
+);
 }
 
 export default App;
