@@ -19,6 +19,7 @@ public class CorsConfig {
         configuration.setAllowedOrigins(List.of(
             "https://afro-kings-frontend.zlbyop.easypanel.host",
             "http://localhost:5173",
+            "https://afrokings-front.duckdns.org",
             "http://localhost:3000"
         ));
 
