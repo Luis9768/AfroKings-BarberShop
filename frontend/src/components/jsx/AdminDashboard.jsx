@@ -286,6 +286,7 @@ function AdminDashboard() {
   const handleSalvarDiaEspecial = async (e) => {
     e.preventDefault();
     setSalvando(true);
+    try {
       const dados = {
         data: dataDiaEspecial,
         descricao: motivoDiaEspecial.trim(),
