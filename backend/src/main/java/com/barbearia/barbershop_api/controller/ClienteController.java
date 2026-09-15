@@ -57,12 +57,15 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<DadosSaidaListaCLientes> obterMeuPerfil(@AuthenticationPrincipal Usuario usuarioLogado) {
+        return ResponseEntity.ok(service.obterPerfil(usuarioLogado));
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/buscarPorEmail/{email}")
     public ResponseEntity<Optional<DadosSaidaListaCLientes>> buscarPorEmail(@PathVariable String email,@AuthenticationPrincipal Usuario usuarioLogado){
         var buscarEmail = service.pesquisarPorEmail(email,usuarioLogado);
         return ResponseEntity.ok(buscarEmail);
     }
-
-
 }

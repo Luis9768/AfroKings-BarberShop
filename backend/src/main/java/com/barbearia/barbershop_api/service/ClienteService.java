@@ -67,54 +67,82 @@ public class ClienteService {
                 .toList();
     }
 
+    @Transactional
     public EntradaAtualizarCliente atualizar(Integer id, EntradaAtualizarCliente dto, Usuario usuarioLogado) {
-        Cliente clienteAntigo = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cliente para atualizar não encontrado!"));
-        boolean ehDono = clienteAntigo.getUsuario().getId().equals(usuarioLogado.getId());
-        if (!ehDono) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID do cliente não informado!");
+        }
+        Cliente clienteAntigo = repository.findById(id)
+                .or(() -> repository.findByUsuarioId(id))
+                .orElseThrow(() -> new IllegalArgumentException("Cliente para atualizar não encontrado!"));
+
+        boolean ehAdmin = usuarioLogado != null && usuarioLogado.getPerfil() == Perfil.ADMIN;
+        boolean ehDono = clienteAntigo.getUsuario() != null && usuarioLogado != null && clienteAntigo.getUsuario().getId().equals(usuarioLogado.getId());
+        if (!ehDono && !ehAdmin) {
             throw new IllegalArgumentException("Você não pode alterar os dados de outra pessoa!");
         }
+
         if (dto.cpf() != null && !dto.cpf().isBlank()) {
-            Optional<Cliente> existeCpf = repository.findByCpf(dto.cpf());
+            Optional<Cliente> existeCpf = repository.findByCpf(dto.cpf().trim());
             if (existeCpf.isPresent() && !existeCpf.get().getId().equals(clienteAntigo.getId())) {
                 throw new IllegalArgumentException("Erro: Este CPF já pertence a outro cliente no sistema!");
             }
+            clienteAntigo.setCpf(dto.cpf().trim());
         }
-        if(dto.nome() != null && !dto.nome().isBlank()) {
-            clienteAntigo.setNome(dto.nome());
+        if (dto.nome() != null && !dto.nome().isBlank()) {
+            clienteAntigo.setNome(dto.nome().trim());
         }
-        if(dto.contato() !=null && !dto.contato().isBlank()) {
-            clienteAntigo.setContato(dto.contato());
+        if (dto.contato() != null && !dto.contato().isBlank()) {
+            clienteAntigo.setContato(dto.contato().trim());
         }
-        if (dto.cpf() != null && !dto.cpf().isBlank()) {
-            clienteAntigo.setCpf(dto.cpf());
+        if (dto.email() != null && !dto.email().isBlank()) {
+            clienteAntigo.setEmail(dto.email().trim());
+            if (clienteAntigo.getUsuario() != null) {
+                clienteAntigo.getUsuario().setLogin(dto.email().trim());
+            }
         }
-        if(dto.email() != null && !dto.email().isBlank()) {
-            clienteAntigo.setEmail(dto.email());
-            clienteAntigo.getUsuario().setLogin(dto.email());
-        }
-        if(dto.dataNascimento() != null) {
+        if (dto.dataNascimento() != null) {
             clienteAntigo.setDataNascimento(dto.dataNascimento());
         }
-        if(dto.senha() != null && !dto.senha().isBlank()){
-           String senha = passwordEncoder.encode(dto.senha());
-           clienteAntigo.getUsuario().setSenha(senha);
+        if (dto.senha() != null && !dto.senha().isBlank()) {
+            String senha = passwordEncoder.encode(dto.senha());
+            if (clienteAntigo.getUsuario() != null) {
+                clienteAntigo.getUsuario().setSenha(senha);
+            }
         }
         clienteAntigo = repository.save(clienteAntigo);
 
         return new EntradaAtualizarCliente(clienteAntigo);
     }
 
+    public DadosSaidaListaCLientes obterPerfil(Usuario usuarioLogado) {
+        if (usuarioLogado == null) {
+            throw new IllegalArgumentException("Usuário não autenticado!");
+        }
+        Cliente cliente = repository.findByUsuarioId(usuarioLogado.getId())
+                .or(() -> repository.findByEmail(usuarioLogado.getLogin()))
+                .orElseThrow(() -> new IllegalArgumentException("Perfil de cliente não encontrado para este usuário!"));
+        return new DadosSaidaListaCLientes(cliente);
+    }
+
+    @Transactional
     public void excluirUsuarioId(Integer idAlvo, Usuario usuarioLogado) {
+        if (idAlvo == null) {
+            throw new IllegalArgumentException("ID não informado!");
+        }
 
-        Usuario usuarioAlvo = usuarioLoginRepository.findById(idAlvo).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado!"));
+        Usuario usuarioAlvo = usuarioLoginRepository.findById(idAlvo)
+                .or(() -> repository.findById(idAlvo).map(Cliente::getUsuario))
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado!"));
 
-        boolean ehAdmin = usuarioLogado.getPerfil() == Perfil.ADMIN;
-        boolean ehDono = usuarioAlvo.getId().equals(usuarioLogado.getId());
+        boolean ehAdmin = usuarioLogado != null && usuarioLogado.getPerfil() == Perfil.ADMIN;
+        boolean ehDono = usuarioLogado != null && usuarioAlvo.getId().equals(usuarioLogado.getId());
         if (!ehAdmin && !ehDono) {
             throw new IllegalArgumentException("Você não tem permissão para deletar este usuário!");
         }
 
-        Cliente clienteAlvo = repository.findByUsuarioId(usuarioAlvo.getId()).orElseThrow(() -> new IllegalArgumentException("Cliente atrelado a este usuário não encontrado!"));
+        Cliente clienteAlvo = repository.findByUsuarioId(usuarioAlvo.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Cliente atrelado a este usuário não encontrado!"));
 
         usuarioAlvo.setAtivo(false);
         clienteAlvo.setAtivo(false);

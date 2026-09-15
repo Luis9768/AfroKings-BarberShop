@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@600;700;800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap");
 
 .login-container {
   width: 100%;
@@ -12,9 +12,23 @@
   overflow-y: auto;
   padding: 48px 20px;
   box-sizing: border-box;
-  background-color: #000000;
+  background: radial-gradient(circle at 50% 30%, #1c170f 0%, #0c0a07 55%, #020202 100%);
 }
 
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 750px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(158, 127, 53, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Imagem de fundo exibida apenas no mobile/tablet para manter a estética original */
 .login-container .bg-image {
   position: fixed;
   top: 0;
@@ -25,7 +39,14 @@
   object-position: center;
   z-index: 0;
   pointer-events: none;
-  filter: brightness(0.65);
+  filter: brightness(0.55);
+}
+
+/* No desktop, oculta a imagem vertical de 393px que ficava esticada e borrada */
+@media (min-width: 1024px) {
+  .login-container .bg-image.mobile-only {
+    display: none;
+  }
 }
 
 .login-card-wrapper {
@@ -37,6 +58,14 @@
   width: 100%;
   max-width: 440px;
   margin: auto 0;
+}
+
+.login-brand-panel {
+  display: none;
+}
+
+.login-form-container {
+  width: 100%;
 }
 
 .login-form {
@@ -235,6 +264,154 @@
   object-fit: contain;
 }
 
+/* ========================================================
+   ESTILOS PREMIUM PARA TELAS DESKTOP ( >= 1024px )
+   Substitui a imagem esticada por um layout split sofisticado
+   ======================================================== */
+@media (min-width: 1024px) {
+  .login-card-wrapper {
+    flex-direction: row;
+    align-items: stretch;
+    max-width: 960px;
+    background: rgba(14, 14, 14, 0.92);
+    backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(158, 127, 53, 0.45);
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(158, 127, 53, 0.18);
+    overflow: hidden;
+  }
+
+  .login-brand-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1.1;
+    padding: 48px 42px;
+    background: linear-gradient(145deg, rgba(28, 22, 12, 0.9) 0%, rgba(12, 12, 12, 0.95) 100%);
+    border-right: 1.5px solid rgba(158, 127, 53, 0.25);
+    position: relative;
+  }
+
+  .login-brand-panel::after {
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(158, 127, 53, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 6px 14px;
+    background: rgba(158, 127, 53, 0.14);
+    border: 1px solid rgba(158, 127, 53, 0.4);
+    border-radius: 50px;
+    color: #C5A85A;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  .brand-logo-hero {
+    margin-bottom: 16px;
+  }
+
+  .brand-logo-img {
+    height: 72px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 14px rgba(158, 127, 53, 0.4));
+  }
+
+  .brand-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.25;
+    margin: 0 0 12px 0;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-subtitle {
+    font-family: 'Poppins', sans-serif;
+    color: #A5A5A5;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin: 0 0 28px 0;
+  }
+
+  .brand-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .highlight-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    border-radius: 12px;
+    background: rgba(158, 127, 53, 0.12);
+    border: 1px solid rgba(158, 127, 53, 0.3);
+  }
+
+  .highlight-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .highlight-text strong {
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .highlight-text span {
+    color: #8E8E8E;
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  .login-form-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 44px 38px;
+  }
+
+  .login-form {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .mobile-logo-box {
+    display: none;
+  }
+}
+
+/* Responsividade para mobile */
 @media (max-width: 480px) {
   .login-container {
     padding: 24px 14px;

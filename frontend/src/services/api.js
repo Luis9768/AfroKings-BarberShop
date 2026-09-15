@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 // Helper para decodificar o token JWT (extrai sub, id, role)
 export function parseJwt(token) {
@@ -143,6 +143,12 @@ export const clienteAPI = {
     });
   },
 
+  obterPerfil: async () => {
+    return await request("/cliente/me", {
+      method: "GET",
+    });
+  },
+
   atualizar: async (id, dadosAtualizacao) => {
     return await request(`/cliente/${id}`, {
       method: "PUT",
@@ -161,6 +167,12 @@ export const clienteAPI = {
 // SERVIÇOS DE BARBEIROS
 // -------------------------------------------------------------
 export const barbeiroAPI = {
+  obterPerfil: async () => {
+    return await request("/barbeiro/me", {
+      method: "GET",
+    });
+  },
+
   listar: async () => {
     return await request("/barbeiro/listar", {
       method: "GET",

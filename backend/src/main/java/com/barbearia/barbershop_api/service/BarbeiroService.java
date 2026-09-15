@@ -53,21 +53,23 @@ public class BarbeiroService {
     @Transactional
     public BarbeiroDto atualizar(int id, DadosEntradaAtualizarBarbeiro dto, Usuario usuarioLogado) {
         boolean ehAdmin = usuarioLogado != null && usuarioLogado.getPerfil() == Perfil.ADMIN;
-        Barbeiro barbeiro = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Barbeiro não encontrado!"));
+        Barbeiro barbeiro = repository.findById(id)
+                .or(() -> repository.findByUsuarioId(id))
+                .orElseThrow(() -> new IllegalArgumentException("Barbeiro não encontrado!"));
         boolean ehDono = barbeiro.getUsuario() != null && usuarioLogado != null && barbeiro.getUsuario().getId().equals(usuarioLogado.getId());
         if (!ehAdmin && !ehDono) {
             throw new IllegalArgumentException("Você não pode alterar os dados de outro Barbeiro!");
         }
         if (dto.nome() != null && !dto.nome().isBlank()) {
-            barbeiro.setNome(dto.nome());
+            barbeiro.setNome(dto.nome().trim());
         }
         if (dto.contato() != null && !dto.contato().isBlank()) {
-            barbeiro.setContato(dto.contato());
+            barbeiro.setContato(dto.contato().trim());
         }
         if (dto.email() != null && !dto.email().isBlank()) {
-            barbeiro.setEmail(dto.email());
+            barbeiro.setEmail(dto.email().trim());
             if (barbeiro.getUsuario() != null) {
-                barbeiro.getUsuario().setLogin(dto.email());
+                barbeiro.getUsuario().setLogin(dto.email().trim());
             }
         }
         if (dto.senha() != null && !dto.senha().isBlank()) {
@@ -87,10 +89,22 @@ public class BarbeiroService {
         return lista;
     }
 
+    public BarbeiroDto obterPerfil(Usuario usuarioLogado) {
+        if (usuarioLogado == null) {
+            throw new IllegalArgumentException("Usuário não autenticado!");
+        }
+        Barbeiro barbeiro = repository.findByUsuarioId(usuarioLogado.getId())
+                .or(() -> repository.findByEmail(usuarioLogado.getLogin()))
+                .orElseThrow(() -> new IllegalArgumentException("Perfil de barbeiro não encontrado para este usuário!"));
+        return new BarbeiroDto(barbeiro);
+    }
+
     @Transactional
     public void deletar(int id, Usuario usuarioLogado) {
         boolean ehAdmin = usuarioLogado != null && usuarioLogado.getPerfil() == Perfil.ADMIN;
-        Barbeiro barbeiro = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Barbeiro não encontrado!"));
+        Barbeiro barbeiro = repository.findById(id)
+                .or(() -> repository.findByUsuarioId(id))
+                .orElseThrow(() -> new IllegalArgumentException("Barbeiro não encontrado!"));
         boolean ehDono = barbeiro.getUsuario() != null && usuarioLogado != null && barbeiro.getUsuario().getId().equals(usuarioLogado.getId());
         if (!ehAdmin && !ehDono) {
             throw new IllegalArgumentException("Você não tem permissão para deletar este usuário!");
@@ -104,7 +118,9 @@ public class BarbeiroService {
 
     public BarbeiroDto buscarPorId(int id, Usuario usuarioLogado){
         boolean ehAdmin = usuarioLogado != null && usuarioLogado.getPerfil() == Perfil.ADMIN;
-        Barbeiro barbeiro = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Barbeiro não encontrado!"));
+        Barbeiro barbeiro = repository.findById(id)
+                .or(() -> repository.findByUsuarioId(id))
+                .orElseThrow(() -> new IllegalArgumentException("Barbeiro não encontrado!"));
         boolean ehDono = barbeiro.getUsuario() != null && usuarioLogado != null && barbeiro.getUsuario().getId().equals(usuarioLogado.getId());
         if (!ehAdmin && !ehDono) {
             throw new IllegalArgumentException("Você não tem permissão para realizar esta ação!");

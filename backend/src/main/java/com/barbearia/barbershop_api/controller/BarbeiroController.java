@@ -40,6 +40,11 @@ public class BarbeiroController {
         var listarId = service.buscarPorId(id, usuarioLogado);
         return ResponseEntity.ok(listarId);
     }
+    @GetMapping("/me")
+    public ResponseEntity<BarbeiroDto> obterMeuPerfil(@AuthenticationPrincipal Usuario usuarioLogado){
+        return ResponseEntity.ok(service.obterPerfil(usuarioLogado));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id, @AuthenticationPrincipal Usuario usuarioLogado){
          service.deletar(id, usuarioLogado);

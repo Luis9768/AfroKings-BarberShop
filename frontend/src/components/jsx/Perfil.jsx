@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { clienteAPI } from "../../services/api";
+import { clienteAPI, barbeiroAPI } from "../../services/api";
 import Header from "../common/Header";
 import Toast from "../common/Toast";
 import {
@@ -34,14 +34,50 @@ function Perfil() {
   const [toast, setToast] = useState({ message: "", type: "info" });
 
   useEffect(() => {
+    let active = true;
+
+    async function carregarPerfilServidor() {
+      try {
+        const dados = isAdmin ? await barbeiroAPI.obterPerfil() : await clienteAPI.obterPerfil();
+        if (active && dados) {
+          if (dados.nome) setNome(dados.nome);
+          if (dados.email) setEmail(dados.email);
+          if (dados.contato) setContato(dados.contato);
+          if (dados.cpf) setCpf(dados.cpf);
+          if (dados.dataNascimento) setDataNascimento(dados.dataNascimento);
+          updateUser({
+            nome: dados.nome,
+            email: dados.email,
+            contato: dados.contato,
+            cpf: dados.cpf,
+            dataNascimento: dados.dataNascimento,
+          });
+        }
+      } catch (e) {
+        // Usa dados locais se a busca online falhar
+        if (active && user) {
+          setNome(user.nome || "");
+          setEmail(user.email || "");
+          setContato(user.contato || "");
+          setCpf(user.cpf || "");
+          setDataNascimento(user.dataNascimento || "");
+        }
+      }
+    }
+
     if (user) {
       setNome(user.nome || "");
       setEmail(user.email || "");
       setContato(user.contato || "");
       setCpf(user.cpf || "");
       setDataNascimento(user.dataNascimento || "");
+      carregarPerfilServidor();
     }
-  }, [user]);
+
+    return () => {
+      active = false;
+    };
+  }, [user?.id, isAdmin]);
 
   const handleSalvarPerfil = async (e) => {
     e.preventDefault();
@@ -59,7 +95,12 @@ function Perfil() {
         payload.senha = novaSenha;
       }
 
-      await clienteAPI.atualizar(user.id, payload);
+      if (isAdmin) {
+        await barbeiroAPI.atualizar(user.id, payload);
+      } else {
+        await clienteAPI.atualizar(user.id, payload);
+      }
+
       updateUser({ nome: payload.nome, email: payload.email, contato: payload.contato });
 
       setToast({ message: "Dados atualizados com sucesso!", type: "success" });
@@ -78,7 +119,11 @@ function Perfil() {
   const handleExcluirConta = async () => {
     if (!user?.id) return;
     try {
-      await clienteAPI.deletar(user.id);
+      if (isAdmin) {
+        await barbeiroAPI.deletar(user.id);
+      } else {
+        await clienteAPI.deletar(user.id);
+      }
       logout();
       navigate("/login");
     } catch (erro) {
