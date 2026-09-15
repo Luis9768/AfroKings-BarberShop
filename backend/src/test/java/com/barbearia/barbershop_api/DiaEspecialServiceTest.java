@@ -8,8 +8,8 @@ import com.barbearia.barbershop_api.entity.Usuario;
 import com.barbearia.barbershop_api.repository.DiaEspecialRepository;
 import com.barbearia.barbershop_api.service.DiaEspecialService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,31 +38,56 @@ public class DiaEspecialServiceTest {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @Test
-    void deveDesserializarJsonDoFrontendComSucesso() throws Exception {
-        // Formato enviado pelo frontend
+    @DisplayName("Deve desserializar JSON de dia de folga total com horários nulos sem erro de LocalTime")
+    void deveDesserializarJsonFolgaComHorariosNulos() throws Exception {
+        // Formato exato enviado pelo frontend no caso de folga total
         String json = """
                 {
-                    "data": "2026-12-25",
-                    "motivo": "Natal",
+                    "data": "2026-09-16",
+                    "descricao": "folga pq sim",
+                    "motivo": "folga pq sim",
                     "diaFolga": true,
-                    "horarioAbertura": "00:00:00",
-                    "horarioFechamento": "00:00:00"
+                    "horaAbertura": null,
+                    "horaFechamento": null
                 }
                 """;
 
         DadosEntradaDiaEspecial dto = objectMapper.readValue(json, DadosEntradaDiaEspecial.class);
 
-        assertEquals(LocalDate.of(2026, 12, 25), dto.data());
-        assertEquals("Natal", dto.descricao());
+        assertEquals(LocalDate.of(2026, 9, 16), dto.data());
+        assertEquals("folga pq sim", dto.descricao());
         assertTrue(dto.diaFolga());
-        assertEquals(LocalTime.of(0, 0), dto.horaAbertura());
+        assertNull(dto.horaAbertura());
+        assertNull(dto.horaFechamento());
     }
 
     @Test
+    @DisplayName("Deve desserializar JSON com horário especial no formato HH:mm")
+    void deveDesserializarJsonComHorarioEspecial() throws Exception {
+        String json = """
+                {
+                    "data": "2026-12-24",
+                    "motivo": "Véspera de Natal",
+                    "diaFolga": false,
+                    "horaAbertura": "08:00",
+                    "horaFechamento": "14:00"
+                }
+                """;
+
+        DadosEntradaDiaEspecial dto = objectMapper.readValue(json, DadosEntradaDiaEspecial.class);
+
+        assertEquals(LocalDate.of(2026, 12, 24), dto.data());
+        assertEquals("Véspera de Natal", dto.descricao());
+        assertFalse(dto.diaFolga());
+        assertEquals(LocalTime.of(8, 0), dto.horaAbertura());
+        assertEquals(LocalTime.of(14, 0), dto.horaFechamento());
+    }
+
+    @Test
+    @DisplayName("Deve cadastrar dia de folga sem horários com sucesso")
     void deveCadastrarDiaFolgaSemHorarios() {
         Usuario admin = new Usuario();
         admin.setPerfil(Perfil.ADMIN);
@@ -71,7 +96,7 @@ public class DiaEspecialServiceTest {
                 LocalDate.now().plusDays(5),
                 null,
                 null,
-                "Feriado",
+                "folga pq sim",
                 true
         );
 
@@ -80,7 +105,7 @@ public class DiaEspecialServiceTest {
         SaidaDiaEspecialDTO resultado = service.cadastro(dto, admin);
 
         assertNotNull(resultado);
-        assertEquals("Feriado", resultado.descricao());
+        assertEquals("folga pq sim", resultado.descricao());
         assertTrue(resultado.diaFolga());
         assertNull(resultado.horarioAbertura());
         assertNull(resultado.horarioFechamento());

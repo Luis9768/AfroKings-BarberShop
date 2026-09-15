@@ -292,10 +292,8 @@ function AdminDashboard() {
         descricao: motivoDiaEspecial.trim(),
         motivo: motivoDiaEspecial.trim(),
         diaFolga: ehFolga,
-        horaAbertura: ehFolga ? null : aberturaEspecial,
-        horaFechamento: ehFolga ? null : fechamentoEspecial,
-        horarioAbertura: ehFolga ? null : aberturaEspecial,
-        horarioFechamento: ehFolga ? null : fechamentoEspecial,
+        horaAbertura: ehFolga ? null : (aberturaEspecial || "08:00"),
+        horaFechamento: ehFolga ? null : (fechamentoEspecial || "18:00"),
       };
 
       await diaEspecialAPI.cadastrar(dados);
