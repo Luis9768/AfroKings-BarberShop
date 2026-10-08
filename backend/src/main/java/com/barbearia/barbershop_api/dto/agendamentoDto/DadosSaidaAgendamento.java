@@ -1,6 +1,7 @@
 package com.barbearia.barbershop_api.dto.agendamentoDto;
 
 import com.barbearia.barbershop_api.entity.Agendamento;
+import com.barbearia.barbershop_api.entity.StatusAgendamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,8 @@ public record DadosSaidaAgendamento(
         LocalDateTime dataHoraInicio,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
         LocalDateTime dataHoraFim,
-        String nomeBarbeiro
+        String nomeBarbeiro,
+        StatusAgendamento statusAgendamento
 ) {
     public DadosSaidaAgendamento(Agendamento agendamento) {
         this(
@@ -22,7 +24,19 @@ public record DadosSaidaAgendamento(
                 agendamento.getServico().getNome(),
                 agendamento.getDataHoraInicio(),
                 agendamento.getDataHoraFim(),
-                agendamento.getBarbeiro().getNome()
+                agendamento.getBarbeiro().getNome(),
+                agendamento.getStatusAgendamento() != null ? agendamento.getStatusAgendamento() : StatusAgendamento.AGENDADO
         );
+    }
+
+    public DadosSaidaAgendamento(
+            Integer id,
+            String nome,
+            String nomeServico,
+            LocalDateTime dataHoraInicio,
+            LocalDateTime dataHoraFim,
+            String nomeBarbeiro
+    ) {
+        this(id, nome, nomeServico, dataHoraInicio, dataHoraFim, nomeBarbeiro, StatusAgendamento.AGENDADO);
     }
 }

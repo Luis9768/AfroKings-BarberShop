@@ -14,7 +14,8 @@ import {
   XCircle,
   PlusCircle,
   CheckCircle2,
-  CalendarDays
+  CalendarDays,
+  CalendarCheck
 } from "lucide-react";
 import "../styles/MeusAgendamentos.css";
 
@@ -96,10 +97,21 @@ function MeusAgendamentos() {
   const handleConfirmarCancelamento = async () => {
     if (!modalCancelar) return;
     setExecutandoAcao(true);
+    const idParaCancelar = modalCancelar.id;
     try {
-      await agendamentoAPI.cancelar(modalCancelar.id);
+      await agendamentoAPI.cancelar(idParaCancelar);
       setToast({ message: "Agendamento cancelado com sucesso!", type: "success" });
       setModalCancelar(null);
+
+      // Atualização imediata no estado local
+      setAgendamentos((prev) =>
+        prev.map((ag) =>
+          ag.id === idParaCancelar
+            ? { ...ag, statusAgendamento: "CANCELADO" }
+            : ag
+        )
+      );
+
       await carregarAgendamentos();
     } catch (erro) {
       console.error("Erro ao cancelar:", erro);
@@ -145,13 +157,30 @@ function MeusAgendamentos() {
     }
   };
 
-  // Separação entre Próximos Cortes e Histórico Passado/Cancelado
+  // Contadores por status
+  const agendadosCount = agendamentos.filter(
+    (item) => (item.statusAgendamento || "AGENDADO") === "AGENDADO"
+  ).length;
+  const canceladosCount = agendamentos.filter(
+    (item) => item.statusAgendamento === "CANCELADO"
+  ).length;
+  const concluidosCount = agendamentos.filter(
+    (item) => item.statusAgendamento === "CONCLUIDO"
+  ).length;
+
+  // Separação entre Agendados, Cancelados e Todos
   const agendamentosFiltrados = agendamentos.filter((item) => {
-    if (tabAtiva === "proximos") {
-      // Itens agendados ou que a data seja futura
-      return true; // Exibe todos os mais recentes
+    const status = item.statusAgendamento || "AGENDADO";
+    if (tabAtiva === "agendados" || tabAtiva === "proximos") {
+      return status === "AGENDADO";
     }
-    return true;
+    if (tabAtiva === "cancelados") {
+      return status === "CANCELADO";
+    }
+    if (tabAtiva === "concluidos") {
+      return status === "CONCLUIDO";
+    }
+    return true; // "todos"
   });
 
   return (
@@ -175,10 +204,30 @@ function MeusAgendamentos() {
         {/* Tabs de Filtro */}
         <div className="tabs-container">
           <button
-            className={`tab-btn ${tabAtiva === "proximos" ? "active" : ""}`}
-            onClick={() => setTabAtiva("proximos")}
+            className={`tab-btn ${tabAtiva === "agendados" || tabAtiva === "proximos" ? "active" : ""}`}
+            onClick={() => setTabAtiva("agendados")}
           >
-            <CalendarDays size={18} /> Todos os Agendamentos ({agendamentos.length})
+            <CheckCircle2 size={16} /> Agendados ({agendadosCount})
+          </button>
+          <button
+            className={`tab-btn ${tabAtiva === "cancelados" ? "active" : ""}`}
+            onClick={() => setTabAtiva("cancelados")}
+          >
+            <XCircle size={16} /> Cancelados ({canceladosCount})
+          </button>
+          {concluidosCount > 0 && (
+            <button
+              className={`tab-btn ${tabAtiva === "concluidos" ? "active" : ""}`}
+              onClick={() => setTabAtiva("concluidos")}
+            >
+              <CalendarCheck size={16} /> Concluídos ({concluidosCount})
+            </button>
+          )}
+          <button
+            className={`tab-btn ${tabAtiva === "todos" ? "active" : ""}`}
+            onClick={() => setTabAtiva("todos")}
+          >
+            <CalendarDays size={16} /> Todos ({agendamentos.length})
           </button>
         </div>
 
@@ -199,65 +248,124 @@ function MeusAgendamentos() {
               Agendar Meu Primeiro Corte
             </button>
           </div>
+        ) : agendamentosFiltrados.length === 0 ? (
+          <div className="empty-state-box">
+            <Scissors size={44} color="#555555" />
+            <h3>Nenhum agendamento nesta categoria</h3>
+            <p>
+              {tabAtiva === "cancelados"
+                ? "Você não possui nenhum agendamento cancelado."
+                : tabAtiva === "concluidos"
+                ? "Nenhum agendamento concluído ainda."
+                : "Você não tem nenhum agendamento ativo no momento."}
+            </p>
+            {(tabAtiva === "agendados" || tabAtiva === "proximos") && (
+              <button
+                className="btn-novo-agendamento-large"
+                onClick={() => navigate("/agendar")}
+              >
+                Agendar Novo Corte
+              </button>
+            )}
+          </div>
         ) : (
           <div className="agendamentos-grid">
-            {agendamentosFiltrados.map((item) => (
-              <article key={item.id} className="agendamento-card">
-                <div className="card-top-bar">
-                  <span className="service-title-badge">
-                    <Scissors size={15} color="#9E7F35" />
-                    {item.nomeServico || "Corte de Cabelo"}
-                  </span>
-                  <span className="status-badge status-agendado">
-                    <CheckCircle2 size={13} /> Agendado
-                  </span>
-                </div>
+            {agendamentosFiltrados.map((item) => {
+              const isCancelado = item.statusAgendamento === "CANCELADO";
+              const isConcluido = item.statusAgendamento === "CONCLUIDO";
 
-                <div className="card-details-list">
-                  <div className="detail-row">
-                    <User size={16} color="#C5A85A" />
-                    <span className="detail-label">Barbeiro:</span>
-                    <strong className="detail-text">{item.nomeBarbeiro || "Mestre Barbeiro"}</strong>
+              return (
+                <article
+                  key={item.id}
+                  className={`agendamento-card ${
+                    isCancelado ? "card-cancelado" : isConcluido ? "card-concluido" : ""
+                  }`}
+                >
+                  <div className="card-top-bar">
+                    <span className="service-title-badge">
+                      <Scissors size={15} color="#9E7F35" />
+                      {item.nomeServico || "Corte de Cabelo"}
+                    </span>
+
+                    {isCancelado ? (
+                      <span className="status-badge status-cancelado">
+                        <XCircle size={13} /> Cancelado
+                      </span>
+                    ) : isConcluido ? (
+                      <span className="status-badge status-concluido">
+                        <CheckCircle2 size={13} /> Concluído
+                      </span>
+                    ) : (
+                      <span className="status-badge status-agendado">
+                        <CheckCircle2 size={13} /> Agendado
+                      </span>
+                    )}
                   </div>
 
-                  <div className="detail-row">
-                    <Calendar size={16} color="#C5A85A" />
-                    <span className="detail-label">Início:</span>
-                    <strong className="detail-text gold-highlight">
-                      {item.dataHoraInicio}
-                    </strong>
-                  </div>
-
-                  {item.dataHoraFim && (
+                  <div className="card-details-list">
                     <div className="detail-row">
-                      <Clock size={16} color="#888888" />
-                      <span className="detail-label">Término previsto:</span>
-                      <span className="detail-text">{item.dataHoraFim}</span>
+                      <User size={16} color="#C5A85A" />
+                      <span className="detail-label">Barbeiro:</span>
+                      <strong className="detail-text">{item.nomeBarbeiro || "Mestre Barbeiro"}</strong>
                     </div>
-                  )}
-                </div>
 
-                <div className="card-actions-footer">
-                  <button
-                    className="action-btn-reagendar"
-                    onClick={() => {
-                      setModalReagendar(item);
-                      setNovaData("");
-                      setNovoHorario("");
-                    }}
-                  >
-                    <RotateCcw size={15} /> Reagendar
-                  </button>
+                    <div className="detail-row">
+                      <Calendar size={16} color="#C5A85A" />
+                      <span className="detail-label">Início:</span>
+                      <strong className={`detail-text ${isCancelado ? "" : "gold-highlight"}`}>
+                        {item.dataHoraInicio}
+                      </strong>
+                    </div>
 
-                  <button
-                    className="action-btn-cancelar"
-                    onClick={() => setModalCancelar(item)}
-                  >
-                    <XCircle size={15} /> Cancelar
-                  </button>
-                </div>
-              </article>
-            ))}
+                    {item.dataHoraFim && (
+                      <div className="detail-row">
+                        <Clock size={16} color="#888888" />
+                        <span className="detail-label">Término previsto:</span>
+                        <span className="detail-text">{item.dataHoraFim}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="card-actions-footer">
+                    {isCancelado ? (
+                      <button
+                        className="action-btn-reagendar btn-novo-apos-cancelar"
+                        onClick={() => navigate("/agendar")}
+                      >
+                        <PlusCircle size={15} /> Agendar Novamente
+                      </button>
+                    ) : isConcluido ? (
+                      <button
+                        className="action-btn-reagendar btn-novo-apos-cancelar"
+                        onClick={() => navigate("/agendar")}
+                      >
+                        <PlusCircle size={15} /> Agendar Novamente
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          className="action-btn-reagendar"
+                          onClick={() => {
+                            setModalReagendar(item);
+                            setNovaData("");
+                            setNovoHorario("");
+                          }}
+                        >
+                          <RotateCcw size={15} /> Reagendar
+                        </button>
+
+                        <button
+                          className="action-btn-cancelar"
+                          onClick={() => setModalCancelar(item)}
+                        >
+                          <XCircle size={15} /> Cancelar
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </main>

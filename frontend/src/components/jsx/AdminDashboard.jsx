@@ -421,19 +421,32 @@ function AdminDashboard() {
                   </div>
                 ) : (
                   <div className="agenda-slots-list">
-                    {agendamentosDoDia.map((item) => (
-                      <div key={item.id} className="agenda-slot-card">
-                        <div className="slot-time-box">
-                          <Clock size={16} color="#9E7F35" />
-                          <strong>{item.dataHoraInicio?.split(" ")[1] || item.dataHoraInicio}</strong>
+                    {agendamentosDoDia.map((item) => {
+                      const isCancelado = item.statusAgendamento === "CANCELADO";
+                      const isConcluido = item.statusAgendamento === "CONCLUIDO";
+                      return (
+                        <div
+                          key={item.id}
+                          className={`agenda-slot-card ${isCancelado ? "slot-card-cancelado" : ""}`}
+                        >
+                          <div className="slot-time-box">
+                            <Clock size={16} color={isCancelado ? "#ff6b6b" : "#9E7F35"} />
+                            <strong>{item.dataHoraInicio?.split(" ")[1] || item.dataHoraInicio}</strong>
+                          </div>
+                          <div className="slot-info">
+                            <h4>{item.nomeServico}</h4>
+                            <p>Cliente: <strong>{item.nome}</strong></p>
+                          </div>
+                          <span
+                            className={`slot-badge ${
+                              isCancelado ? "slot-badge-cancelado" : isConcluido ? "slot-badge-concluido" : ""
+                            }`}
+                          >
+                            {isCancelado ? "Cancelado" : isConcluido ? "Concluído" : "Marcado"}
+                          </span>
                         </div>
-                        <div className="slot-info">
-                          <h4>{item.nomeServico}</h4>
-                          <p>Cliente: <strong>{item.nome}</strong></p>
-                        </div>
-                        <span className="slot-badge">Marcado</span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
